@@ -23,6 +23,7 @@ from kwave.utils.signals import tone_burst
 
 
 if __name__ == '__main__':
+
     plate_thickness_list_in_lambda = np.arange(1,10,1)
 
     for plate_thickness_in_lambda in plate_thickness_list_in_lambda:
@@ -31,7 +32,7 @@ if __name__ == '__main__':
         sim_data_base_path = r"C:\Users\chris\Desktop\Simulations_daten"
 
         # make new folder with current date
-        info = "pmma_thickness_" + str(plate_thickness_in_lambda) + "_lambda"
+        info = "pmma_focused_thickness_" + str(plate_thickness_in_lambda) + "_lambda"
         timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
         sim_path = os.path.join(sim_data_base_path, timestamp + "_" + info)
         if not os.path.exists(sim_path):
@@ -52,11 +53,11 @@ if __name__ == '__main__':
         # source signal
         source_f0 = f_0
         source_amp = 1e6
-        source_cycles = 5
+        source_cycles = 7
         source_focus = 20e-3
 
         # transducer position
-        transducer_translation = kwave.data.Vector([-37.5e-3, 0, 0])
+        transducer_translation = kwave.data.Vector([-20e-3, 0, 0])
         transducer_diameter = 15e-3
         transducer_focus_pos = [20e-3,0,0]          # only used to define the angle of the transducer
         transducer_rotation = kwave.data.Vector([0, 0, 0])
@@ -68,7 +69,7 @@ if __name__ == '__main__':
         grid_size_x = 100e-3
         grid_size_y = 20e-3
         grid_size_z = 20e-3
-        ppw = 7
+        ppw = 5
         t_end = 2*np.max([grid_size_x, grid_size_y, grid_size_z])/c_water
         cfl = 0.3
 
@@ -93,8 +94,8 @@ if __name__ == '__main__':
 
         # SOURCE
         karray = kWaveArray(bli_tolerance=0.05, upsampling_rate=10)
-        karray.add_disc_element(position=[0, 0, 0], diameter=transducer_diameter, focus_pos=transducer_focus_pos)
-        karray.set_array_position(transducer_translation, transducer_rotation)
+        karray.add_bowl_element(position=tuple(np.array(transducer_translation)), radius=transducer_focus_pos[0], diameter=transducer_diameter, focus_pos=transducer_focus_pos)
+        # karray.set_array_position(transducer_translation, transducer_rotation)
         source_sig = source_amp * tone_burst(1 / kgrid.dt, source_f0, source_cycles)
         if debug_plot:
             plt.plot(source_sig)
@@ -169,12 +170,11 @@ if __name__ == '__main__':
 
 
         # save plot of signal
-        fig = plt.figure(figsize=(15, 5))
+        fig = plt.figure()
         plt.plot(rx_signal)
         plt.xlabel('samples')
         plt.ylabel('amplitude in a.u.')
         plt.title('received signal')
-        plt.tight_layout
         fig.savefig(os.path.join(sim_path, "rx_signal_plot"))
 
         # Save plot of setup
