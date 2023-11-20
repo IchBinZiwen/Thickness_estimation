@@ -43,8 +43,8 @@ def do_the_simulation(d1,d2):
 
     # the following 3 parameter describe the physical dimension of the simulation domain in SI unit meter
     grid_size_x = 30e-3
-    grid_size_y = 2e-3
-    grid_size_z = 2e-3
+    grid_size_y = 5e-3
+    grid_size_z = 5e-3
     ppw = 10  # this parameter describes the discretization resolution in points per wavelength, initially was set to 3; but 3 results in numerical artefacts
     t_end = 35e-6  # this defines the length of the simulation in time
     cfl = 0.3  # this the Courant-Friedrichs-Lewy number --> important for discretization, should be smaller than 1!!!! typically values between 0.15 and 0.5, has to be adapted if simulation is not converging
@@ -210,13 +210,13 @@ def bruto_force(r,waves):
 
 if __name__ == '__main__':
     # do the simulation and save in hard disk
-    creat_the_datafile(new_data=0)
+    creat_the_datafile(new_data=0 )
     # load simulated signal
     loaded_dict = np.load('data.npy', allow_pickle=True).item()
     print('keys of dict：', loaded_dict.keys())
     waves_dict=seprate_the_waves(loaded_dict)
     print('keys of wave：', waves_dict.keys())
-    for i in list(loaded_dict.keys())[4:5]:
+    for i in list(loaded_dict.keys())[0:1]:
         r=loaded_dict[i][1]
         waves=waves_dict[list(loaded_dict.keys())[-1]]
         x_ls, J_ls, optimal_d = bruto_force(r, waves)
