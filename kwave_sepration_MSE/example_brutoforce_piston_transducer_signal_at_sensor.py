@@ -87,7 +87,7 @@ def do_the_simulation(d1,d2):
     sound_speed[Nx // 2:, :, :] = c0  # make half of the domain with different speed of sound
 
     density = np.ones((Nx, Ny, Nz)) * rho0  # define grid for density
-    density[d1 * Nx // 100:(d1+d2) * Nx // 100, :, :] = 3 * rho0  # part of the grid can have higher density
+    density[ Nx * d1 // 100: Nx * (d1+d2)// 100, :, :] = 3 * rho0  # part of the grid can have higher density
 
     medium.sound_speed = sound_speed  # adding speed of sound and density to the medium
     medium.density = density
@@ -128,12 +128,11 @@ def do_the_simulation(d1,d2):
     # plt.title('signal at sensor')
     # plt.show()
     return t,p,d1,d2
-
 def creat_the_datafile(new_data=0):
     # new_data = 0
     signal_dict = {}
     if new_data == 1:
-        d_list = [15, 17]
+        d_list = [2,3,4,5,6,8,10,13,16]
         for d2 in d_list:
             d1, d2 = 30, d2
             t, p, d1, d2 = do_the_simulation(d1, d2)
@@ -143,7 +142,7 @@ def creat_the_datafile(new_data=0):
 def seprate_the_waves(loaded_dict):
     dt = 3e-8  # time interval of samples. unit [s]
     wave_dict = {}
-    for i in list(loaded_dict.keys())[5:7]:
+    for i in list(loaded_dict.keys())[:]:
         plt.plot(loaded_dict[i][0], loaded_dict[i][1])
         m_x = 1.34e-5
         b = 0.18e-5
@@ -165,34 +164,48 @@ def seprate_the_waves(loaded_dict):
         wave_dict[i] = np.array(wave)
     return wave_dict
 
-def creat_matrix_A(wave_dict):
+def creat_matrix_A(waves,d,r):
     """y=Ax,use wave_dict to creat A"""
-
-    return A
-
-def bruto_force(r,waves):
-    # J=(y-r)'(y-r); y=A*x,
+    A=np.zeros((len(r),3))
+    l_wave= waves.shape[1]
+    idx1=386
+    dt = 3e-8
+    c0 = 1500
+    d_mm=d*30e-3/100
+    idx2=int(idx1+1*2*d_mm/c0/dt)
+    idx3=int(idx1+2*2*d_mm/c0/dt)
+    A[idx1:idx1 + l_wave, 0] = waves[0,:]
+    A[idx2:idx2 + l_wave, 1] = waves[1,:]
+    A[idx3:idx3 + l_wave, 2] = waves[2,:]
+    # plt.plot(A)
+    # plt.plot(r)
+    # plt.show()
+    return A,d
+def optimize_x(A, r):
+    # 初始猜测值 x
+    x_initial_guess = np.zeros(A.shape[1])
     def cost_function(x):
         y = np.dot(A, x)
         return np.dot((y - r).T, (y - r))
-    for d in [1,2,3,4,5]:
-        A=creat_matrix_A(waves,d)
-        # 初始猜测值 x
-        x_initial_guess = np.zeros(A.shape[1])
-    # 定义损失函数 J
-
-
-    # 使用 minimize 函数最小化损失函数
     result = minimize(cost_function, x_initial_guess, method='BFGS')
-
-    # 提取最优解和最小化目标函数值
     x_optimal = result.x
     J_optimal = result.fun
 
-    print("最优解 x:", x_optimal)
-    print("最小化目标函数值 J(x):", J_optimal)
+    return x_optimal, J_optimal
+def bruto_force(r,waves):
+    x_ls=[]
+    J_ls=[]
+    d_ls=np.arange(2,15,1)
+    for d in d_ls:
+        A,d=creat_matrix_A(waves,d,r)
+        x, J = optimize_x(A, r)
+        x_ls.append(x)
+        J_ls.append(J)
+    min_idx = np.argmin(J_ls)
+    optimal_d= d_ls[min_idx]
 
-    return thickness
+
+    return x_ls,J_ls,optimal_d
 
 
 if __name__ == '__main__':
@@ -201,10 +214,16 @@ if __name__ == '__main__':
     # load simulated signal
     loaded_dict = np.load('data.npy', allow_pickle=True).item()
     print('keys of dict：', loaded_dict.keys())
-    wave_dict=seprate_the_waves(loaded_dict)
-    print('keys of wave：', wave_dict.keys())
-    creat_matrix_A(wave_dict)
+    waves_dict=seprate_the_waves(loaded_dict)
+    print('keys of wave：', waves_dict.keys())
+    for i in list(loaded_dict.keys())[4:5]:
+        r=loaded_dict[i][1]
+        waves=waves_dict[list(loaded_dict.keys())[-1]]
+        x_ls, J_ls, optimal_d = bruto_force(r, waves)
+        print(i)
+        print(optimal_d)
 
 
-    plt.show()
+
+
 
