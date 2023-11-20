@@ -1,0 +1,59 @@
+[33mcommit 1f3096a860cdff840aba0cab4597ddb167d3640e[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: ziwen <ziwen.zhao95@outlook.com>
+Date:   Tue Nov 7 12:57:02 2023 +0800
+
+    fuck, git is too hard to use
+
+[33mcommit d5bab7934da331ed28965245ba592104db0480d3[m
+Merge: 4b19ac6 741da44
+Author: ziwen <ziwen.zhao95@outlook.com>
+Date:   Tue Nov 7 12:30:39 2023 +0800
+
+    Merge branch 'main' of github.com:IchBinZiwen/Thickness_estimation
+
+[33mcommit 741da443fd4a045095de56af379cab3b3afbcbc0[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: chri-ku <82941299+chri-ku@users.noreply.github.com>
+Date:   Fri Oct 27 21:22:09 2023 +0200
+
+    Update .gitignore
+
+[33mcommit 7f266878be5a35a1636be520aaee792e4e5e9ba8[m
+Author: chri-ku <82941299+chri-ku@users.noreply.github.com>
+Date:   Fri Oct 27 11:54:47 2023 +0200
+
+    starting sim
+    
+    - added simple simulations scripts
+    - added environment yaml-file
+    - deleted phantom and sensor data for kwave example (can be downloaded from kwave repository)
+    - ATTENTION: i had to additionally include kwave module into the simulation folder, since some of the modules can not be found from the conda/pip installation
+
+[33mcommit 4b19ac6394ac900fcdf63c1806b0c32644009689[m
+Author: ziwen <ziwen.zhao95@outlook.com>
+Date:   Fri Sep 29 12:29:00 2023 +0200
+
+    first paper in lib
+
+[33mcommit 768afdc2f15ca2dc968cec33a7d3969668e1184e[m
+Author: ziwen <ziwen.zhao95@outlook.com>
+Date:   Fri Sep 29 11:57:06 2023 +0200
+
+    no message
+
+[33mcommit 6318e3233b6ab6d9d68d02509cd080da56233bfc[m[33m ([m[1;31morigin/feature_config[m[33m)[m
+Author: ziwen <ziwen.zhao95@outlook.com>
+Date:   Wed Sep 27 14:06:46 2023 +0200
+
+    add config
+
+[33mcommit 09806798cf51b394b53fe96aa2987f427a343b03[m
+Author: ziwen <ziwen.zhao95@outlook.com>
+Date:   Wed Sep 27 14:04:01 2023 +0200
+
+    add readme.md
+
+[33mcommit 5e2ef3177bac15725d44fd407b3e77ed7d509506[m
+Author: IchBinZiwen <145781984+IchBinZiwen@users.noreply.github.com>
+Date:   Wed Sep 27 12:38:05 2023 +0200
+
+    Create .gitignore
