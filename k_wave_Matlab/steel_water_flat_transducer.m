@@ -1,6 +1,6 @@
 % by CK, based on kwave example example_at_circular_piston_3D.m
 % 
-% Simulation of a plane piston transducer in water with a pmma plate
+% Simulation of a plane piston transducer in water with a steel plate
 %
 
 clearvars;
@@ -12,7 +12,7 @@ clearvars;
 simulation_data_base_path = "C:\Users\chris\Desktop\Simulations_daten";
 
 % make a new directory
-directory_name = "pmma_test_Matlab";
+directory_name = "steel_test_Matlab";
 simulation_data_path = append(simulation_data_base_path, "\", datestr(datetime("now"), 'yyyymmddTHHMMSS'),"_", directory_name);
 if ~exist(simulation_data_path, 'dir')
     % Folder does not exist so create it.
@@ -36,8 +36,8 @@ model           = 1;
 % medium parameters
 c0              = 1500;     % sound speed [m/s]
 rho0            = 1000;     % density [kg/m^3]
-c_pmma          = 2750;
-rho_pmma        = 1180;
+c_steel          = 5790;
+rho_steel        = 7500;
 
 % source parameters
 source_f0       = 1e6;      % source frequency [Hz]
@@ -52,9 +52,8 @@ axial_size      = 60e-3;    % total grid size in the axial dimension [m]
 lateral_size    = 20e-3;    % total grid size in the lateral dimension [m]
 
 % computational parameters
-ppw             = 7;        % number of points per wavelength
+ppw             = 32;        % number of points per wavelength
 t_end           = 140e-6;    % total compute time [s] (this must be long enough to reach steady state)
-record_periods  = 7;        % number of periods to record
 cfl             = 0.5;      % CFL number
 bli_tolerance   = 0.03;     % tolerance for truncation of the off-grid source points
 upsampling_rate = 10;       % density of integration points relative to grid
@@ -119,15 +118,15 @@ for plate_thickness_in_lambda = plate_thickness_in_lambda_list
     % --------------------
     
     % assign medium properties
-    plate_thickness_in_meter = plate_thickness_in_lambda/source_f0*c_pmma;
+    plate_thickness_in_meter = plate_thickness_in_lambda/source_f0*c_steel;
     
     [diff, top_surface_plate_idx_x_direction] = min(abs(kgrid.x_vec - (kgrid.x_vec(1) + distance_transducer_plate_surface)));
     [diff, bottom_surface_plate_idx_x_direction] = min(abs(kgrid.x_vec - (kgrid.x_vec(1) + (distance_transducer_plate_surface + plate_thickness_in_meter))));
     
     medium.sound_speed = c0 * ones(Nx, Ny, Nz);         % [m/s]
-    medium.sound_speed(top_surface_plate_idx_x_direction:bottom_surface_plate_idx_x_direction, :, :) = c_pmma;       % speed of sound of PMMA [m/s]
+    medium.sound_speed(top_surface_plate_idx_x_direction:bottom_surface_plate_idx_x_direction, :, :) = c_steel;       % speed of sound of Steel [m/s]
     medium.density = rho0 * ones(Nx, Ny, Nz);           % [kg/m^3]
-    medium.density(top_surface_plate_idx_x_direction:bottom_surface_plate_idx_x_direction, :, :) = rho_pmma;         % density of PMMA
+    medium.density(top_surface_plate_idx_x_direction:bottom_surface_plate_idx_x_direction, :, :) = rho_steel;         % density of steel
     
     % --------------------
     % SENSOR

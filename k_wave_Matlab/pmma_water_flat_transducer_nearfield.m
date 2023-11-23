@@ -20,7 +20,7 @@ if ~exist(simulation_data_path, 'dir')
 end
 
 % make thickness list
-plate_thickness_in_lambda_list = linspace(0.5, 3, 3);
+plate_thickness_in_lambda_list = linspace(2, 4, 3);
 
 % =========================================================================
 % DEFINE LITERALS
@@ -45,15 +45,15 @@ source_diam     = 15e-3;    % piston diameter [m]
 source_amp      = 1e6;      % source pressure [Pa]
 
 % experimental setup
-distance_transducer_plate_surface = 37.5e-3;    % This is the focal length of a 15 mm diameter transducer
+distance_transducer_plate_surface = 5e-3;    % This is the focal length of a 15 mm diameter transducer
 
 % grid parameters
-axial_size      = 60e-3;    % total grid size in the axial dimension [m]
+axial_size      = 40e-3;    % total grid size in the axial dimension [m]
 lateral_size    = 20e-3;    % total grid size in the lateral dimension [m]
 
 % computational parameters
 ppw             = 7;        % number of points per wavelength
-t_end           = 140e-6;    % total compute time [s] (this must be long enough to reach steady state)
+t_end           = 100e-6;    % total compute time [s] (this must be long enough to reach steady state)
 record_periods  = 7;        % number of periods to record
 cfl             = 0.5;      % CFL number
 bli_tolerance   = 0.03;     % tolerance for truncation of the off-grid source points
